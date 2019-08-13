@@ -12,9 +12,10 @@ var budgetController = (function() {
 var UIController = (function() {
 
     var DOMstrings = {
-      inputType: '.add__btn',
-      inputDescription: 'add__description',
-      inputValue: 'add__value'
+      inputType: '.add__type',
+      inputDescription: '.add__description',
+      inputValue: '.add__value',
+      inputBtn: '.add__btn'
     };
 
   //Method for returning all the 3 inputs for the UI
@@ -25,6 +26,10 @@ var UIController = (function() {
                description: document.querySelector(DOMstrings.inputDescription).value,
                value: document.querySelector(DOMstrings.inputValue).value
             };
+        },
+
+        getDOMstrings: function() {
+          return DOMstrings;
         }
     };
 
@@ -36,6 +41,21 @@ var UIController = (function() {
                           //We could also use the original names, but that's not a good practice. It would make
                           //a module less independent then
 var controller = (function(budgetCtrl, UICtrl) {
+
+    var setupEventListeners = function() {
+        var DOM = UICtrl.getDOMstrings();
+
+        document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);//a call back
+        //We need to add it to a global, that's why there's no querySelector or else
+        document.addEventListener('keypress', function(event) {
+          if (event.keyCode === 13 || event.which === 13 ) {
+          //a call
+              ctrlAddItem();
+          }
+      });
+    };
+
+
 
     var ctrlAddItem = function () {
 
@@ -51,18 +71,13 @@ var controller = (function(budgetCtrl, UICtrl) {
 
       // 5. Display the budget
 
+  };
+
+  return {
+    init: function () {
+        setupEventListeners();
     }
-                                                                  //a call back
-    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+  }
 
-    //We need to add it to a global, that's why there's no querySelector or else
-    document.addEventListener('keypress', function(event) {
-
-        if (event.keyCode === 13 || event.which === 13 ) {
-           //a call
-            ctrlAddItem();
-        }
-
-    });
 
 })(budgetController, UIController);
